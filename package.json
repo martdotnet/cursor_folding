@@ -1,0 +1,206 @@
+{
+  "name": "cursor-folding",
+  "displayName": "Cursor Folding",
+  "description": "Enables keybinds to fold/unfold relative to your cursor",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.103.0"
+  },
+  "categories": [
+    "Keymaps", "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration":[
+      {
+        "title": "Cursor Folding",
+        "properties": {
+          "cursor-folding.ignoreParentOnFoldAllUpperBlocks" :{
+            "type": "boolean",
+            "default": true,
+            "description": "When true and executing cursor-folding.foldAllUpperBlocks, do not fold the upper block that contains the cursor."
+          },
+          "cursor-folding.ignoreChildFoldsOnFoldAllExceptCursor" :{
+            "type": "boolean",
+            "default": true,
+            "description": "When true and executing cursor-folding.foldAllExceptCursor, do not fold the child blocks containing the cursor."
+          },
+          "cursor-folding.excludeCursorBlockOnFoldUntilCursor" :{
+            "type": "boolean",
+            "default": true,
+            "description": "When true and executing cursor-folding.foldUntilCursor and if the cursor is within a block, the block that contains the cursor is not folded."
+          },
+          "cursor-folding.excludeCursorBlockOnFoldPastCursor" :{
+            "type": "boolean",
+            "default": true,
+            "description": "When true and executing cursor-folding.foldPastCursor and if the cursor is within a block, the block that contains the cursor is not folded."
+          },
+          "cursor-folding.onlyFoldSelectionsWhenFullyCapped" :{
+            "type": "boolean",
+            "default": false,
+            "description": "If enabled, selection folding will only occur if selection fully captures both range's start and end lines. Otherwise, folding can occur if either range index meets the selection range."
+          }
+        }
+      }
+    ],
+    "commands": [
+      {
+        "command": "cursor-folding.foldAll",
+        "title": "Fold All"
+      },
+      {
+        "command": "cursor-folding.unfoldAll",
+        "title": "Unfold All"
+      },
+      {
+        "command": "cursor-folding.foldCurrentBlock",
+        "title": "Fold Current Block"
+      },
+      {
+        "command": "cursor-folding.unfoldCurrentBlock",
+        "title": "Unfold Current Block"
+      },
+      {
+        "command": "cursor-folding.toggleFoldCurrentBlock",
+        "title": "Toggle Fold Current Block"
+      },
+      {
+        "command": "cursor-folding.foldLevelN",
+        "title": "Fold Level ..."
+      },
+      {
+        "command": "cursor-folding.foldAllUpperBlocks",
+        "title": "Fold All Upper Blocks"
+      },
+      {
+        "command": "cursor-folding.foldAllDeeperBlocks",
+        "title": "Fold All Deeper Blocks"
+      },
+      {
+        "command": "cursor-folding.foldAllEnclosingDeeperBlocks",
+        "title": "Fold Scoped Deeper Blocks"
+      },
+      {
+        "command": "cursor-folding.foldSameIndent",
+        "title": "Fold Same Indentation"
+      },
+      {
+        "command": "cursor-folding.foldAllExceptCursor",
+        "title": "Fold All Except Cursor"
+      },
+      {
+        "command": "cursor-folding.foldUntilCursor",
+        "title": "Fold Until Cursor"
+      },
+      {
+        "command": "cursor-folding.foldPastCursor",
+        "title": "Fold Past Cursor"
+      },
+      {
+        "command": "cursor-folding.foldSelection",
+        "title": "Fold Selection"
+      },
+      {
+        "command": "cursor-folding.unfoldSelection",
+        "title": "Unfold Selection"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "cursor-folding.foldAll",
+        "key": "ctrl+alt+shift+`",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "cursor-folding.unfoldAll",
+        "key": "ctrl+`",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "cursor-folding.foldCurrentBlock",
+        "key": "alt+shift+[",
+        "when": "editorTextFocus && !editor.hasSelection"
+      },
+      {
+        "command": "cursor-folding.unfoldCurrentBlock",
+        "key": "alt+shift+]",
+        "when": "editorTextFocus && !editor.hasSelection"
+      },
+      {
+        "command": "cursor-folding.toggleFoldCurrentBlock",
+        "key": "alt+`",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "cursor-folding.foldLevelN",
+        "key": "ctrl+k ctrl+0",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "cursor-folding.foldAllUpperBlocks",
+        "key": "alt+\\",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "cursor-folding.foldAllDeeperBlocks",
+        "key": "ctrl+alt+\\",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "cursor-folding.foldAllEnclosingDeeperBlocks",
+        "key": "alt+shift+\\",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "cursor-folding.foldSameIndent",
+        "key": "ctrl+shift+`",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "cursor-folding.foldAllExceptCursor",
+        "key": "alt+f",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "cursor-folding.foldUntilCursor",
+        "key": "ctrl+alt+[",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "cursor-folding.foldPastCursor",
+        "key": "ctrl+alt+]",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "cursor-folding.foldSelection",
+        "key": "alt+shift+[",
+        "when": "editor.hasSelection"
+      },
+      {
+        "command": "cursor-folding.unfoldSelection",
+        "key": "alt+shift+]",
+        "when": "editor.hasSelection"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.103.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@typescript-eslint/eslint-plugin": "^8.39.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "eslint": "^9.32.0",
+    "typescript": "^5.9.2",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
