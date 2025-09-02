@@ -25,4 +25,14 @@
   - `cursor-folding.excludeCursorBlockOnFoldUntilCursor`
   - `cursor-folding.excludeCursorBlockOnFoldPastCursor`
   - `cursor-folding.onlyFoldSelectionsWhenFullyCapped`
-- Default keybindings are added for these 15 commands. For details see [README.md](README.md).
+- Default keybindings are added for these 15 commands. For details see README.md
+## **[1.1.0]** <small><small>(Updated: 09/2/2025)</small></small>
+### Added
+- Configurable setting:
+  - `cursor-folding.unfoldChildFoldsOnFoldAllExceptCursor`
+    - When `true`, will unfold child blocks. Only possible when `cursor-folding.ignoreChildFoldsOnFoldAllExceptCursor` is set to `true`
+- Files:
+  - `commands.ts` : now contains all commands
+  - `helpers.ts` : now contains helper functions used in commands.ts
+### Fixed
+  - `calc_levels` failed on nested ranges because a range would only check if its exceeds the parent range once.

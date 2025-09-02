@@ -1,8 +1,12 @@
 {
   "name": "cursor-folding",
   "displayName": "Cursor Folding",
+  "publisher": "martdotnet",
+  "repository": {
+    "url": "https://github.com/martdotnet/cursor_folding"
+  },
   "description": "Enables keybinds to fold/unfold relative to your cursor",
-  "version": "0.0.1",
+  "version": "1.1.0",
   "engines": {
     "vscode": "^1.103.0"
   },
@@ -25,6 +29,11 @@
             "type": "boolean",
             "default": true,
             "description": "When true and executing cursor-folding.foldAllExceptCursor, do not fold the child blocks containing the cursor."
+          },
+          "cursor-folding.unfoldChildFoldsOnFoldAllExceptCursor" :{
+            "type": "boolean",
+            "default": true,
+            "description": "cursor-folding.ignoreChildFoldsOnFoldAllExceptCursor must be true. When true and executing cursor-folding.foldAllExceptCursor, unfolds the child blocks of the block containing the cursor."
           },
           "cursor-folding.excludeCursorBlockOnFoldUntilCursor" :{
             "type": "boolean",
