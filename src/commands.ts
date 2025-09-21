@@ -7,18 +7,22 @@ export const config = vscode.workspace.getConfiguration('cursor-folding');
 export async function fold_all() {
   await vscode.commands.executeCommand('editor.foldAll');
 }
+
 // unfolds everything
 export async function unfold_all() {
   await vscode.commands.executeCommand('editor.unfoldAll');
 }
+
 // fold only the block which has the cursor
 export async function fold() {
   await vscode.commands.executeCommand('editor.fold', { levels: 1, direction: 'up' });
 }
+
 // unfold only the block which has the cursor
 export async function unfold() {
   await vscode.commands.executeCommand('editor.unfold', { levels: 1, direction: 'up' });
 }
+
 // toggles fold and unfold depending on fold state
 export async function toggle_fold() {
   await vscode.commands.executeCommand('editor.toggleFold');
@@ -57,6 +61,7 @@ export async function fold_level_n(txt: vscode.TextEditor) {
 
   await vscode.commands.executeCommand('editor.fold', { levels: 1, direction: 'up', selectionLines: target_lines });
 }
+
 /** fold all blocks that level one less than the current cursor level */
 export async function fold_upper(txt: vscode.TextEditor) {
   // get all folding ranges (0-based)
@@ -80,7 +85,7 @@ export async function fold_upper(txt: vscode.TextEditor) {
   let upper_ranges = grouped[upper_level - 1];
   if (exclParent) {
     // remove current cursor range
-    upper_ranges.splice(candidates[upper_level], 1);
+    upper_ranges.splice(candidates[upper_level - 1], 1);
   }
 
   if (upper_ranges) {
@@ -108,6 +113,7 @@ export async function fold_deeper(txt: vscode.TextEditor) {
   // do fold
   await vscode.commands.executeCommand('editor.fold', { levels: 1, direction: 'up', selectionLines: target_lines });
 }
+
 // fold all blocks that level one more than the current cursor level, but only in its block
 export async function fold_deeper_enclosing(txt: vscode.TextEditor) {
   // get all folding ranges (0-based)
@@ -143,11 +149,14 @@ export async function fold_same_indent(txt: vscode.TextEditor) {
   // do fold
   await vscode.commands.executeCommand('editor.fold', { levels: 1, direction: 'up', selectionLines: target_lines });
 }
+
 // focus block
 export async function focus_cursor(txt: vscode.TextEditor) {
   // get all folding ranges (0-based)
   let ranges = await vscode.commands.executeCommand<vscode.FoldingRange[]>('vscode.executeFoldingRangeProvider', txt.document.uri);
   let grouped = helper.group_ranges(ranges);
+  // create copy of group to splice
+  let grp_cpy = grouped.map(v => [...v]);
 
   // get level of the block that the cursor is in
   let enclosed = helper.get_enclosing_ranges(grouped, txt.selection.start.line);
@@ -158,34 +167,41 @@ export async function focus_cursor(txt: vscode.TextEditor) {
   // get prop
   let exclude_children = config.get<boolean>('ignoreChildFoldsOnFoldAllExceptCursor');
   // loop over matched levels
-  for (let i = 0; i < grouped.length; i++) {
+  for (let i = 0; i < grp_cpy.length; i++) {
     if (enclosed.length > i) {
       // remove matching ranges
-      grouped[i].splice(enclosed[i], 1);
+      grp_cpy[i].splice(enclosed[i], 1);
     }
     else if (exclude_children) {
       // ranges level is higher than cursor
       // exclude whole range
-      grouped[i] = [];
+      grp_cpy[i] = [];
     }
   }
 
   // get all lines that match level
-  let target_ranges = grouped.reduce<vscode.FoldingRange[]>((prev, cur) => prev.concat(...cur), []);
+  let target_ranges = grp_cpy.reduce<vscode.FoldingRange[]>((prev, cur) => prev.concat(...cur), []);
   let target_lines = target_ranges.map(v => v.start);
   // do fold
   await vscode.commands.executeCommand('editor.fold', { levels: 1, direction: 'up', selectionLines: target_lines });
- 
+
   // new do unfold of children
   let unfold_children = config.get<boolean>('cursor-folding.unfoldChildFoldsOnFoldAllExceptCursor');
   if (!unfold_children || grouped.length <= enclosed.length) {
     return; // nothing to unfold
   }
-  let unfolds: number[] = [];
   let parent = grouped[enclosed.length - 1][enclosed.at(-1)!];
-  for (let child_range of grouped[enclosed.length]) {
-    if (child_range.start > parent.start && child_range.end < parent.end) {
-      unfolds.push(child_range.start);
+  let unfolds: number[] = [parent.start];
+
+  for (let i = enclosed.length; i < grouped.length; i++) {
+    for (let child_range of grouped[i]) {
+      if (child_range.start > parent.start && child_range.end < parent.end) {
+        unfolds.push(child_range.start);
+      }
+      else if (child_range.end > parent.end) {
+        // ordered list so we can break
+        break;
+      }
     }
   }
   await vscode.commands.executeCommand('editor.unfold', { levels: 1, direction: 'up', selectionLines: unfolds });
@@ -221,6 +237,7 @@ export async function fold_until_cursor(txt: vscode.TextEditor) {
   // do fold
   await vscode.commands.executeCommand('editor.fold', { levels: 1, direction: 'up', selectionLines: target_lines });
 }
+
 // fold all blocks below cursor
 export async function fold_past_cursor(txt: vscode.TextEditor) {
   // get all folding ranges (0-based)
@@ -237,7 +254,7 @@ export async function fold_past_cursor(txt: vscode.TextEditor) {
       // cursor is within a block that we need to exclude
       continue;
     }
-    else if (range.start < txt.selection.start.line) {
+    else if (range.end < txt.selection.start.line) {
       // skip
       continue;
     }
@@ -251,6 +268,7 @@ export async function fold_past_cursor(txt: vscode.TextEditor) {
   // do fold
   await vscode.commands.executeCommand('editor.fold', { levels: 1, direction: 'up', selectionLines: target_lines });
 };
+
 // fold selections
 export async function fold_selection(txt: vscode.TextEditor) {
   let require_full = config.get<boolean>('onlyFoldSelectionsWhenFullyCapped');
@@ -271,6 +289,7 @@ export async function fold_selection(txt: vscode.TextEditor) {
   let lines = matched_ranges.map(v => v.start);
   await vscode.commands.executeCommand('editor.fold', { levels: 1, direction: 'up', selectionLines: lines });
 }
+
 // unfold selections
 export async function unfold_selection(txt: vscode.TextEditor) {
   let require_full = config.get<boolean>('onlyFoldSelectionsWhenFullyCapped');

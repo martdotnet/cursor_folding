@@ -6,46 +6,47 @@
     "url": "https://github.com/martdotnet/cursor_folding"
   },
   "description": "Enables keybinds to fold/unfold relative to your cursor",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "engines": {
     "vscode": "^1.103.0"
   },
   "categories": [
-    "Keymaps", "Other"
+    "Keymaps",
+    "Other"
   ],
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "configuration":[
+    "configuration": [
       {
         "title": "Cursor Folding",
         "properties": {
-          "cursor-folding.ignoreParentOnFoldAllUpperBlocks" :{
+          "cursor-folding.ignoreParentOnFoldAllUpperBlocks": {
             "type": "boolean",
             "default": true,
             "description": "When true and executing cursor-folding.foldAllUpperBlocks, do not fold the upper block that contains the cursor."
           },
-          "cursor-folding.ignoreChildFoldsOnFoldAllExceptCursor" :{
+          "cursor-folding.ignoreChildFoldsOnFoldAllExceptCursor": {
             "type": "boolean",
             "default": true,
             "description": "When true and executing cursor-folding.foldAllExceptCursor, do not fold the child blocks containing the cursor."
           },
-          "cursor-folding.unfoldChildFoldsOnFoldAllExceptCursor" :{
+          "cursor-folding.unfoldChildFoldsOnFoldAllExceptCursor": {
             "type": "boolean",
             "default": true,
             "description": "cursor-folding.ignoreChildFoldsOnFoldAllExceptCursor must be true. When true and executing cursor-folding.foldAllExceptCursor, unfolds the child blocks of the block containing the cursor."
           },
-          "cursor-folding.excludeCursorBlockOnFoldUntilCursor" :{
+          "cursor-folding.excludeCursorBlockOnFoldUntilCursor": {
             "type": "boolean",
             "default": true,
             "description": "When true and executing cursor-folding.foldUntilCursor and if the cursor is within a block, the block that contains the cursor is not folded."
           },
-          "cursor-folding.excludeCursorBlockOnFoldPastCursor" :{
+          "cursor-folding.excludeCursorBlockOnFoldPastCursor": {
             "type": "boolean",
             "default": true,
             "description": "When true and executing cursor-folding.foldPastCursor and if the cursor is within a block, the block that contains the cursor is not folded."
           },
-          "cursor-folding.onlyFoldSelectionsWhenFullyCapped" :{
+          "cursor-folding.onlyFoldSelectionsWhenFullyCapped": {
             "type": "boolean",
             "default": false,
             "description": "If enabled, selection folding will only occur if selection fully captures both range's start and end lines. Otherwise, folding can occur if either range index meets the selection range."
